@@ -1,0 +1,6 @@
+classes= 4
+train  = data/pdq_train.txt
+valid  = data/pdq_train.txt
+names = data/pdq_obj.names
+backup = backup/
+
