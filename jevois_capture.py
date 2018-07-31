@@ -67,6 +67,9 @@ camera.set(4,480) #height
 camera.set(5,10) #fps
 s,img = camera.read()
 
+SendParm (b'setpar serout All\n') # output everything on serial
+time.sleep(2)
+
 tps = 'setthresh '+str(thresh)+'\n'
 thresh_param = tps.encode('utf-8')
 SendParm (thresh_param) # set the threshold for detection %
