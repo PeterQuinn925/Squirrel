@@ -103,19 +103,26 @@ class CV_Diff:
     # ###################################################################################################
     ## Parse a serial command forwarded to us by the JeVois Engine, return a string
     def parseSerial(self, str):
+        global x #the threshold pixels to trigger a change
         jevois.LINFO("parseserial received command [{}]".format(str))
         if str == "hello":
             return self.hello()
-        return "ERR Unsupported command"
+        elif "setthresh" in str:
+           inputline=str.split(" ")
+           x=int(inputline[1])
+           return self.setthresh()
+        else:
+           return "ERR Unsupported command"
     
     # ###################################################################################################
     ## Return a string that describes the custom commands we support, for the JeVois help message
     def supportedCommands(self):
         # use \n seperator if your module supports several commands
-        return "hello - print hello using python"
+        return "setthresh"
 
     # ###################################################################################################
     ## Internal method that gets invoked as a custom command
     def hello(self):
         return "Hello from python!"
-        
+    def setthresh(self):
+        return "Threshold set"     
