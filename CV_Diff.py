@@ -4,10 +4,12 @@ import numpy as np
 
 lastimg =None #initialize global. todo: figure out how to put in the class
 lastcolorimg=None
+x=1000000 #number of pixel changes before the scene is deemed to be different.
 
 ## Store changed images
 #
-# Add some description of your module here.
+# Write a message to the serial output anytime the image changes more than x pixels
+
 #
 # @author peter quinn
 # 
@@ -58,6 +60,8 @@ class CV_Diff:
     def process(self, inframe, outframe):
         global lastimg
         global lastcolorimg
+        global x #num of changed pixels before considering the scene different
+        
         # Get the next camera image (may block until it is captured) and here convert it to OpenCV BGR. If you need a
         # grayscale image, just use getCvGRAY() instead of getCvBGR(). Also supported are getCvRGB() and getCvRGBA():
         inimg = inframe.getCvGRAY()
@@ -68,26 +72,13 @@ class CV_Diff:
         # Start measuring image processing time (NOTE: does not account for input conversion time):
         self.timer.start()
     
-        # Detect edges using the Laplacian algorithm from OpenCV:
-        #
-        # Replace the line below by your own code! See for example
-        # - http://docs.opencv.org/trunk/d4/d13/tutorial_py_filtering.html
-        # - http://docs.opencv.org/trunk/d9/d61/tutorial_py_morphological_ops.html
-        # - http://docs.opencv.org/trunk/d5/d0f/tutorial_py_gradients.html
-        # - http://docs.opencv.org/trunk/d7/d4d/tutorial_py_thresholding.html
-        #
-        # and so on. When they do "img = cv2.imread('name.jpg', 0)" in these tutorials, the last 0 means they want a
-        # gray image, so you should use getCvGRAY() above in these cases. When they do not specify a final 0 in imread()
-        # then usually they assume color and you should use getCvBGR() above.
-        #
-        # The simplest you could try is:
-        #    outimg = inimg
-        # which will make a simple copy of the input image to output.
-        diffimg= cv2.absdiff(inimg,lastimg)
-        totaldiff = np.sum(diffimg)
-        if totaldiff > 1000000:
+        diffimg= cv2.absdiff(inimg,lastimg) # compare two images. Will be all black if they are the same.
+        totaldiff = np.sum(diffimg) #count how many pixels are not black
+        
+        if totaldiff > x: #the image has changed, update it.
             outimg=colorimg
             lastcolorimg=colorimg
+            jevois.sendSerial("Frame Changed");
         else:
             #outimg = diffimg #use for checking the tolerances
             outimg = lastcolorimg
