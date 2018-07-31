@@ -8,12 +8,33 @@ import cv2
 import serial
 import logging
 from datetime import datetime
+
+def SendParm(cmd):
+   ser.write (cmd)
+   time.sleep(1)
+   line = ser.readline()
+   if Headless:
+      logging.info(cmd.decode('utf8'))
+      logging.info(line.decode('utf8'))
+   else:
+      print (cmd.decode('utf8'))
+      print (line.decode('utf8'))
       
 #main -------
+thresh=1000000 # default detection threshold **in pixels**
 Headless=True
+#Headless=False #for debugging. Remove for deployment
 if len(sys.argv)>1:
    if sys.argv[1]=='-show':
       Headless=False
+   elif 'thresh' in sys.argv[1]: 
+      thresh_arg=sys.argv[1].split("=")
+      thresh=int(thresh_arg[1])
+
+if len(sys.argv)>2:
+   if 'thresh' in sys.argv[2]:
+      thresh_arg=sys.argv[2].split("=")
+      thresh=int(thresh_arg[1])
 
 if os.name == 'nt':
    folder = 'C:\\users\\peter/jevois_capture'
@@ -45,7 +66,10 @@ camera.set(3,640) #width
 camera.set(4,480) #height
 camera.set(5,10) #fps
 s,img = camera.read()
-#wait for Yolo to load on camera.
+
+tps = 'setthresh '+str(thresh)+'\n'
+thresh_param = tps.encode('utf-8')
+SendParm (thresh_param) # set the threshold for detection %
 time.sleep(1)
 
 while True:
