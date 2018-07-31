@@ -25,7 +25,7 @@ else: #linux
    logfile = '/home/pi/jevois.log'
    port = '/dev/ttyACM0'
    camno = 0
-Headless=False
+
 logging.basicConfig(filename=logfile,level=logging.DEBUG)
 logging.info('------- Jevois Cam Startup jevois_capture--------')
 ser = serial.Serial(port,115200,timeout=1)
