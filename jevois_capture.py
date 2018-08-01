@@ -74,9 +74,10 @@ tps = 'setthresh '+str(thresh)+'\n'
 thresh_param = tps.encode('utf-8')
 SendParm (thresh_param) # set the threshold for detection %
 time.sleep(1)
-
+frameno=0
 while True:
    s,img = camera.read()
+   frameno=frameno+1
    if not Headless:
       cv2.imshow("jevois", img )
       cv2.waitKey(1)
@@ -95,7 +96,13 @@ while True:
          else:
             print("writing image: "+imagefile)
          cv2.imwrite(folder1+imagefile,img)
-      
+      else:
+         if Headless:
+           #log every 1000 to avoid overwhelming the log
+            if frameno % 1000 == 0:
+               logging.info(line.decode('utf8'))
+         else:
+            print(line.decode('utf8'))
 
    
 
