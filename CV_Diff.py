@@ -97,9 +97,9 @@ class CV_Diff:
         outframe.sendCv(outimg)
 
         # Example of sending some serial output message:
-        jevois.sendSerial("DONE frame {}".format(self.frame));
+       # jevois.sendSerial("DONE frame {}".format(self.frame));
         self.frame += 1
-        
+        jevois.sendSerial("diff: {}".format(str(totaldiff)));
     # ###################################################################################################
     ## Parse a serial command forwarded to us by the JeVois Engine, return a string
     def parseSerial(self, str):
