@@ -23,6 +23,7 @@ def SendParm(cmd):
 #main -------
 thresh=1000000 # default detection threshold **in pixels**
 Headless=True
+
 #Headless=False #for debugging. Remove for deployment
 if len(sys.argv)>1:
    if sys.argv[1]=='-show':
@@ -87,15 +88,16 @@ while True:
    #example output: "Frame Changed" when the image changes
    
    if len(line)>0:
-      if "Frame Changed" in str(line): 
-         #save the picture
-         folder1 = folder + "/raw/"
-         imagefile = datetime.now().strftime('%Y%m%d_%Hh%Mm%Ss%f') + '.jpg'
-         if Headless:
-           logging.info("writing image: "+imagefile)
-         else:
-            print("writing image: "+imagefile)
-         cv2.imwrite(folder1+imagefile,img)
+      if "Frame Changed" in str(line):
+         if frameno % 5 == 0:#reduce the number of dups
+            #save the picture
+            folder1 = folder + "/raw/"
+            imagefile = datetime.now().strftime('%Y%m%d_%Hh%Mm%Ss%f') + '.jpg'
+            if Headless:
+              logging.info("writing image: "+imagefile)
+            else:
+              print("writing image: "+imagefile)
+            cv2.imwrite(folder1+imagefile,img)
       else:
          if Headless:
            #log every 1000 to avoid overwhelming the log
