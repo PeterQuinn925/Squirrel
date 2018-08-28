@@ -1,6 +1,7 @@
 import libjevois as jevois
 import cv2
 import numpy as np
+import time
 
 lastimg =None #initialize global. todo: figure out how to put in the class
 lastcolorimg=None
@@ -82,6 +83,7 @@ class CV_Diff:
         else:
             #outimg = diffimg #use for checking the tolerances
             outimg = lastcolorimg
+            time.sleep(.1)
             
         lastimg = inframe.getCvGRAY()
         # Write a title:
