@@ -1,18 +1,22 @@
 import os,sys
 import time
-sys.path.append('/home/peter/darknet/python')
+#sys.path.append('/home/peter/darknet/python')
 sys.path.append('/home/peter/darknet')
 
-import darknet as dn
+#import darknet as dn
 import pdb
 import shutil
 import numpy as np
 import cv2
+from darknetAB import performDetect
 
-net = dn.load_net(b'/home/peter/darknet/cfg/pdq.cfg',b'/home/peter/darknet/pdq_3100.weights',0)
-meta = dn.load_meta(b'/home/peter/darknet/data/pdq_obj.data')
-
+#net = dn.load_net(b'/home/peter/darknet/cfg/yolov3-tiny_pdq.cfg',b'/home/peter/darknet/backup/yolov3-tiny_pdq_25700.weights',0)
+#meta = dn.load_meta(b'/home/peter/darknet/data/pdq_obj.data')
+cfg_file = "/home/peter/darknet/cfg/yolov3-tiny_pdq.cfg"
+obj_file = "/home/peter/darknet/data/pdq_obj.data"
+weights = "/home/peter/darknet/backup/yolov3-tiny_pdq_32000.weights"
 folder = '/home/peter/Pictures'
+thresh  = 0.4
 
 while True:
    files = os.listdir(folder)
@@ -23,16 +27,17 @@ while True:
            print (f)
            path = os.path.join(folder, f)
            pathb = path.encode('utf-8')
-           res = dn.detect(net, meta, pathb)
+           #res = dn.detect(net, meta, pathb)
+           res=performDetect(folder+"/"+f,thresh,cfg_file,weights,obj_file,False,True,False)
            print (res) #list of name, probability, bounding box center x, center y, width, height
            i=0
            new_path = '/home/peter/Pictures/none/'+f #initialized to none
            img = cv2.imread(path,cv2.IMREAD_COLOR) #load image in cv2
            while i<len(res):
-               res_type = res[i][0].decode('utf-8')      
+               res_type = res[i][0]      
                if "person" in res_type:
                    #copy file to person directory
-                   new_path = '/home/peter/Pictures/people/'+f
+                   new_path = '/home/peter/Pictures/person/'+f
                    #set the color for the person bounding box
                    box_color = (0,255,0)
                elif "cat" in res_type:
