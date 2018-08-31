@@ -77,9 +77,8 @@ SendParm (thresh_param) # set the threshold for detection %
 time.sleep(1)
 frameno=0
 while True:
-   s,img = camera.read()
-   frameno=frameno+1
    if not Headless:
+      s,img = camera.read()
       cv2.imshow("jevois", img )
       cv2.waitKey(1)
    line = ser.readline()
@@ -89,9 +88,12 @@ while True:
    
    if len(line)>0:
       if "Frame Changed" in str(line):
-         if frameno % 5 == 0:#reduce the number of dups
+         s,img = camera.read()
+         frameno=frameno+1
+         if frameno % 3 == 0:#reduce the number of dups
             #save the picture
-            folder1 = folder + "/raw/"
+#            folder1 = folder + "/raw/"
+            folder1=folder + "/"
             imagefile = datetime.now().strftime('%Y%m%d_%Hh%Mm%Ss%f') + '.jpg'
             if Headless:
               logging.info("writing image: "+imagefile)
@@ -101,7 +103,7 @@ while True:
       else:
          if Headless:
            #log every 1000 to avoid overwhelming the log
-            if frameno % 1000 == 0:
+            if frameno % 100 == 0:
                logging.info(line.decode('utf8'))
          else:
             print(line.decode('utf8'))
