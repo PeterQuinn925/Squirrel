@@ -8,7 +8,7 @@ import pdb
 import shutil
 import numpy as np
 import cv2
-from darknetAB import performDetect
+from darknetAB import performDetect #use darknet not darknetAB as I renamed it to avoid confusion with PJs
 
 #net = dn.load_net(b'/home/peter/darknet/cfg/yolov3-tiny_pdq.cfg',b'/home/peter/darknet/backup/yolov3-tiny_pdq_25700.weights',0)
 #meta = dn.load_meta(b'/home/peter/darknet/data/pdq_obj.data')
